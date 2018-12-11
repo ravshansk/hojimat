@@ -4,10 +4,10 @@
 permalink:			/:categories/:title:output_ext
 
 # Setup
-title:               Ravshan S.K. 
+title:               Hojimat Consulting 
 tagline:             'Statistical and Economic Consultancy'
 description:         'I help researchers, data scientists and growth hackers in performing economic analyses, developing statistical algorithms and research methods. My two-edits policy guarantees the quality of my work and your satisfaction. Read on.'
-url:                 'http://ravshansk.com'
+url:                 'http://hojimat.com'
 baseurl:             ''
 plugins: [jekyll-seo-tag, jekyll-sitemap, jekyll-redirect-from]
 
@@ -18,7 +18,7 @@ author:
   email:             rsk@ravshansk.com
 
 # Social media
-twitter_username:	ravshansk
+twitter_username:	hojimat
 
 # Custom vars
 version:             1.0.0
