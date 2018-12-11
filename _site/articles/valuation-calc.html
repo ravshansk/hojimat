@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3">
+  <meta name="description" content="R reimplementation of Daniel McCarthy and Peter Fader's valuation model">
+  
+ <meta name="keywords" content="peter fader, R, economics, management, stock, valuation, IPO, public data, subscription" />
+  
+
+ <meta name="twitter:site"    content="@ravshansk">
+ <meta name="twitter:title"   content="Valuation Calculator for Subscription-Based Businesses">
+ <meta name="twitter:card"  content="summary_large_image">
+ <meta property="fb:admins" content="ravshanskh">
+ 
+ <meta name="twitter:image" content="http://localhost:4000/assets/img/churn/diag2.png">
+ 
+
+  <title>
+    
+      Valuation Calculator for Subscription-Based Businesses &middot; Ravshan S.K.
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" media='screen and (max-width: 850px)' href='/assets/css/mobile.css' />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-111922010-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-111922010-1');
+</script>
+
+
+</head>
+
+<!-- Begin Jekyll SEO tag v2.3.0 -->
+<title>Valuation Calculator for Subscription-Based Businesses | Ravshan S.K.</title>
+<meta property="og:title" content="Valuation Calculator for Subscription-Based Businesses" />
+<meta name="author" content="Ravshanbek Khodzhimatov" />
+<meta property="og:locale" content="english" />
+<meta name="description" content="R reimplementation of Daniel McCarthy and Peter Fader’s valuation model" />
+<meta property="og:description" content="R reimplementation of Daniel McCarthy and Peter Fader’s valuation model" />
+<link rel="canonical" href="http://localhost:4000/articles/valuation-calc.html" />
+<meta property="og:url" content="http://localhost:4000/articles/valuation-calc.html" />
+<meta property="og:site_name" content="Ravshan S.K." />
+<meta property="og:image" content="http://localhost:4000/assets/img/churn/diag2.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-11-27T00:00:00+06:00" />
+<script type="application/ld+json">
+{"description":"R reimplementation of Daniel McCarthy and Peter Fader’s valuation model","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/articles/valuation-calc.html"},"@type":"BlogPosting","url":"http://localhost:4000/articles/valuation-calc.html","name":null,"headline":"Valuation Calculator for Subscription-Based Businesses","dateModified":"2018-11-27T00:00:00+06:00","datePublished":"2018-11-27T00:00:00+06:00","sameAs":null,"publisher":null,"image":"http://localhost:4000/assets/img/churn/diag2.png","author":{"@type":"Person","name":"Ravshanbek Khodzhimatov"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <body>
+
+    <div class="titlehead">
+        <div class="titleleft">
+          <a href="/#" title="Home">Ravshan S.K.</a>
+        </div>
+		<nav class="topnav" id="myTopNav">
+  			<div class="nav-container">
+  	    			<a href="/#about" title="About">About</a>
+  	    			<a href="/#works" title="Works">Works</a>
+  	    			<a href="/#hire" title="Hire">Hire now</a>
+  	    			<a href="/#contact" title="Contact">Contact</a>
+  	    			<a href="/articles" title="Articles">Articles</a>
+  	    			<a href="/blog" title="Blog">Blog</a>
+					<a href="javascript:void(0);" class="icon" onclick="myFunction()">
+						<i class="fa fa-bars"></i>
+					</a>
+  			</div>
+		</nav>
+    </div>
+
+
+    <div class="container content">
+      <div class="post">
+  <h1 class="post-title">Valuation Calculator for Subscription-Based Businesses</h1>
+  <span class="post-date">27 Nov 2018</span>
+  <p>Last summer I worked on a project that used Daniel McCarthy, Peter Fader and Bruce Hardie’s valuation model, described in their paper “Valuing Subscription-Based Businesses Using Publicly Disclosed Customer Data” available at <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2701093#maincontent">SSRN</a>.</p>
+
+<p>Their model features a lot of series, vectors, matrices, intertwined recursive definitions, that it was very difficult to comprehend at first. So, if you are going to read their paper, here is the diagram that I have drawn to make it easier for you to understand it.</p>
+
+<figure class="blog">
+	<img src="/assets/img/churn/diag.png" height="300%" />
+	<figcaption>McCarthy et al.'s Customer behavior model</figcaption>
+</figure>
+
+<p>In the summer gig, I mentioned, I had to use an Excel-based optimization kindly provided by Dan Mccarthy, due to time constraints. But now I finally found time to replicate their model in R.</p>
+
+<p>It’s in an earliest alpha version now, and does not optimize consistently. Moreover, I haven’t built a Shiny user interface due to my workload on other projects.</p>
+
+<p>However, if you are interested, you can find the code in the <a href="https://github.com/ravshansk/danmccarthy">Github repo that I created specifically for that</a>. You are welcome to contribute to the project. I will welcome your pull requests.</p>
+
+<p>Ideally, the project will constitute an open-source user-friendly valuation calculator for subscription-based businesses.</p>
+
+<p>Let’s combine our codes to make life easier for laymen!</p>
+
+</div>
+
+<div class="share-page">
+	<a href="https://twitter.com/share?
+		text=[enter%20text]&
+		url=http://localhost:4000/articles/valuation-calc.html&
+		via=ravshansk"
+	   target="_blank"
+	>Tweet it</a>
+
+	<a href="https://www.linkedin.com/shareArticle?
+		mini=true&
+		url=http://localhost:4000/articles/valuation-calc.html&
+		title=Valuation Calculator for Subscription-Based Businesses
+		summary=R reimplementation of Daniel McCarthy and Peter Fader's valuation model&
+		source=Ravshan S.K."
+	   target="_blank"
+	>Share on Linkedin</a>
+
+    <a href="https://facebook.com/sharer.php?
+		u=http://localhost:4000/articles/valuation-calc.html"
+	   target="_blank"
+	>Share on Facebook</a>
+    
+	<a href="https://plus.google.com/share?
+		url=http://localhost:4000/articles/valuation-calc.html"
+	   target="_blank"
+	>Share on Google+</a>
+
+</div>
+
+<script src="https://apis.google.com/js/plusone.js"></script>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.1';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div class="fb-comments"
+	data-href="http://localhost:4000/articles/valuation-calc.html"
+	data-numposts="5"
+	data-width="642">
+</div>
+ 
+<div class="g-comments"
+     data-href="http://localhost:4000/articles/valuation-calc.html"
+     data-width="642"
+     data-first_party_property="BLOGGER"
+     data-view_type="FILTERED_POSTMOD">
+</div>
+
+
+
+    </div>
+
+	<div class="sidebar">
+		<div class="categories">
+			<h3>Read categories</h3>
+				<a class="categs" href="/economics">economics</a>
+				<a class="categs" href="/statistics">statistics</a>
+				<a class="categs" href="/finance">finance</a>
+				<a class="categs" href="/management">management</a>
+				<a class="categs" href="/complexity">complexity</a>
+				<a class="categs" href="/crypto">crypto</a>
+		</div>
+		<div class="recent">
+			<h3>Recent articles</h3>
+				<ul>
+					
+						
+   	   						<li class="post-title"><a href="/articles/brazil-noshow.html">My take on the famous medical appointment no-show problem</a></li>
+						
+					
+						
+					
+						
+					
+						
+   	   						<li class="post-title"><a href="/articles/saudi-visa.html">Using matching with quotas to solve Hajj visa problem</a></li>
+						
+					
+						
+   	   						<li class="post-title"><a href="/articles/valuation-calc.html">Valuation Calculator for Subscription-Based Businesses</a></li>
+						
+					
+				</ul>
+		</div>
+	</div>
+
+	<div class="footer">
+		<div class="titlecenter">
+			Copyright 2018. All rights reserved
+		</div>
+	</div>
+
+	<script>
+	function myFunction() {
+		var x = document.getElementById("myTopNav");
+		if (x.className === "topnav") {
+			x.className += " responsive";
+		} else {
+			x.className = "topnav";
+		}
+	}
+	</script>
+
+  </body>
+</html>

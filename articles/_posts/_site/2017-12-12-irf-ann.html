@@ -1,0 +1,11 @@
+<p>This week I’ve been working on a research paper based on a very simple idea which, hopefully, can solve an important problem in applying machine learning techniques in economics — the interpretability. So, if you recall, the neural networks is the generalization of a logit model where sigmoid of a linear combination of inputs is used iteratively.</p>
+
+<figure class="blog">
+	<img src="/assets/img/irfann/ann.png" alt="Generalization of Logit" />
+	<figcaption>ANN as a generalization of logit</figcaption>
+</figure>
+
+<p>So, the problem with applying this model to economics problems is that the information is distributed among neurons and one cannot tell the causal effect of any given input variable on the variable of interest. So, I proposed a very simple solution: after having computed all of the weights using backpropagation, we need to do the following: use sparce vectors [1,0,0,0,…,0], [0,1,0,0,0,…,0],….,[0,0,0,0,…,1] and feed them to the network. The output will give the effects of any individual input variable to the output variable. This method is called Impulse Response Function Analysis in Economics and has much use in VAR models.</p>
+
+<p>In conclusion, since simple doesn’t mean trivial, I believe this simple workaround is an important contribution to the economic analysis.</p>
+

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://ogp.me/ns/fb#">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+{% include head.html %}
+{% seo %}
+  <body>
+
+	<div class="background">
+		<img src="/assets/img/background2.jpg" alt="Loading..." style="width:100%;">
+		<div class="titlemain">
+			<a href="#about">
+				<h1>Statistical and Economic Consultancy</h1>
+				<div class="tagline">Helping researchers and data analysts in building statistical algorithms</div>
+			</a>
+		</div>
+	</div>
+
+    <div class="titlehead">
+        <div class="titleleft">
+          <a href="#" title="Home">{{ site.title }}</a>
+         <!-- <small>{{ site.tagline }}</small>-->
+        </div>
+		<nav class="topnav" id="myTopNav">
+  			<div class="nav-container">
+  	    			<a href="#about" title="About">About</a>
+  	    			<a href="#works" title="Works">Works</a>
+  	    			<a href="#hire" title="Hire">Hire now</a>
+  	    			<a href="#contact" title="Contact">Contact</a>
+  	    			<a href="/articles" title="Articles">Articles</a>
+  	    			<a href="/blog" title="Blog">Blog</a>
+					<a href="javascript:void(0);" class="icon" onclick="myFunction()">
+						<i class="fa fa-bars"></i>
+					</a>
+  			</div>
+		</nav>
+    </div>
+
+
+    <div class="container content">
+      {{ content }}
+    </div>
+
+	<div class="footer">
+		<div class="titlecenter">
+			Copyright 2018. All rights reserved
+		</div>
+	</div>
+
+	<script>
+	function myFunction() {
+		var x = document.getElementById("myTopNav");
+		if (x.className === "topnav") {
+			x.className += " responsive";
+		} else {
+			x.className = "topnav";
+		}
+	}
+	</script>
+
+  </body>
+</html>

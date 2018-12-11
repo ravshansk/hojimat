@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3">
+  <meta name="description" content="I help researchers, data scientists and growth hackers in performing economic analyses, developing statistical algorithms and research methods. My two-edits policy guarantees the quality of my work and your satisfaction. Read on.">
+  
+ <meta name="keywords" content="stata, cointreg, pedroni, panel data" />
+  
+
+ <meta name="twitter:site"    content="@ravshansk">
+ <meta name="twitter:title"   content="Introducing Panel FMOLS/DOLS command for Stata">
+ <meta name="twitter:card"  content="summary_large_image">
+ <meta property="fb:admins" content="ravshanskh">
+ 
+ <meta property="og:image" content="http://ravshansk.com/assets/img/thumb.jpg">
+ <meta name="twitter:image" content="http://ravshansk.com/assets/img/thumb.jpg">
+ 
+
+  <title>
+    
+      Introducing Panel FMOLS/DOLS command for Stata &middot; Ravshan S.K.
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" media='screen and (max-width: 850px)' href='/assets/css/mobile.css' />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-111922010-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-111922010-1');
+</script>
+
+
+</head>
+
+<!-- Begin Jekyll SEO tag v2.3.0 -->
+<title>Introducing Panel FMOLS/DOLS command for Stata | Ravshan S.K.</title>
+<meta property="og:title" content="Introducing Panel FMOLS/DOLS command for Stata" />
+<meta name="author" content="Ravshanbek Khodzhimatov" />
+<meta property="og:locale" content="english" />
+<meta name="description" content="Last week I was hired to perform a thorough analysis of a panel dataset for export dynamics of different sectors in a country. I had never done panel econometrics before or even read it in a textbook. But since I am good at cross-section and time-series, I believed I could handle the task. And I wasn’t wrong." />
+<meta property="og:description" content="Last week I was hired to perform a thorough analysis of a panel dataset for export dynamics of different sectors in a country. I had never done panel econometrics before or even read it in a textbook. But since I am good at cross-section and time-series, I believed I could handle the task. And I wasn’t wrong." />
+<link rel="canonical" href="http://localhost:4000/articles/xtcointreg.html" />
+<meta property="og:url" content="http://localhost:4000/articles/xtcointreg.html" />
+<meta property="og:site_name" content="Ravshan S.K." />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-01-01T00:00:00+06:00" />
+<script type="application/ld+json">
+{"description":"Last week I was hired to perform a thorough analysis of a panel dataset for export dynamics of different sectors in a country. I had never done panel econometrics before or even read it in a textbook. But since I am good at cross-section and time-series, I believed I could handle the task. And I wasn’t wrong.","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/articles/xtcointreg.html"},"@type":"BlogPosting","url":"http://localhost:4000/articles/xtcointreg.html","name":null,"headline":"Introducing Panel FMOLS/DOLS command for Stata","dateModified":"2018-01-01T00:00:00+06:00","datePublished":"2018-01-01T00:00:00+06:00","sameAs":null,"publisher":null,"image":null,"author":{"@type":"Person","name":"Ravshanbek Khodzhimatov"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <body>
+
+    <div class="titlehead">
+        <div class="titleleft">
+          <a href="/#" title="Home">Ravshan S.K.</a>
+        </div>
+		<nav class="topnav" id="myTopNav">
+  			<div class="nav-container">
+  	    			<a href="/#about" title="About">About</a>
+  	    			<a href="/#works" title="Works">Works</a>
+  	    			<a href="/#hire" title="Hire">Hire now</a>
+  	    			<a href="/#contact" title="Contact">Contact</a>
+  	    			<a href="/articles" title="Articles">Articles</a>
+  	    			<a href="/blog" title="Blog">Blog</a>
+					<a href="javascript:void(0);" class="icon" onclick="myFunction()">
+						<i class="fa fa-bars"></i>
+					</a>
+  			</div>
+		</nav>
+    </div>
+
+
+    <div class="container content">
+      <div class="post">
+  <h1 class="post-title">Introducing Panel FMOLS/DOLS command for Stata</h1>
+  <span class="post-date">01 Jan 2018</span>
+  <p>Last week I was hired to perform a thorough analysis of a panel dataset for export dynamics of different sectors in a country. I had never done panel econometrics before or even read it in a textbook. But since I am good at cross-section and time-series, I believed I could handle the task. And I wasn’t wrong.</p>
+
+<p>Since this task was single time with no generalizations/automations required, my tool of choice was of course Stata. It doesn’t have a scalability like R but has a very comfortable syntax. You ask me what about E-views? E-views sucks.</p>
+
+<p>However, in process I realized that panel FMOLS cannot be done natively in stata. The closest thing is <code class="highlighter-rouge">xtpedroni</code> but it gives panel DOLS and didn’t add panel FMOLS. R also doesn’t have such a library. Ironically, E-views turned out to have that feature. But I wouldn’t concede that easy. So, I decided to go back to <a href="https://econpapers.repec.org/article/tprrestat/v_3a83_3ay_3a2001_3ai_3a4_3ap_3a727-731.htm">Pedroni’s 1996 paper</a> and examine the structure of panel FMOLS estimators. It turned out to be a simple average between each panel’s FMOLS for coefficients and sum divided by the square root of the total number of panels for t-statistics.</p>
+
+<p>So, I got that and tried to write a code for it, but it turned out to be very challenging. Then I found out that there is actually an existing tool for time series FMOLS estimation called <code class="highlighter-rouge">cointreg</code>. This is an excellent program written by <a href="http://ageconsearch.umn.edu/bitstream/229441/2/sjart_st0272.pdf">Qunyong Wang and Na Wu</a>. So, I just applied the group mean averaging to it.</p>
+
+<p>Meet a new command for Stata <code class="highlighter-rouge">xtcointreg</code>. It basically adapts <code class="highlighter-rouge">cointreg</code> to a panel environment, so you need to <a href="http://agec    onsearch.umn.edu/bitstream/229441/2/sjart_st0272.pdf">install it first</a>. The documentation is the same as <code class="highlighter-rouge">cointreg</code> plus one option <code class="highlighter-rouge">full</code>. I will submit the file to “ssc”. In the meantime you can <a href="/assets/ftp/xtcointreg.ado">download the .ado file here</a> and place it in the folder called “ado” located inside your system directory(which can be found with a command `sysdir’).</p>
+
+<p>Hope it will help you in your research. Please feel free to <a href="/contact">contact me</a> with any questions and commments.</p>
+
+<p><strong>Update</strong> It was included to SSC. You can use <code class="highlighter-rouge">ssc install xtcointreg</code> to download it.</p>
+
+<p><strong>Update 2</strong> If you have installed the program successfully but it is not working for some reason, please try this workaround:</p>
+<ol>
+  <li>write a command <code class="highlighter-rouge">which xtcointreg</code> and find the location of the <strong>xtcointreg.ado</strong> file;</li>
+  <li>open that file with any text editor and remove the line number 8 <code class="highlighter-rouge">capt program drop xtcointreg</code>;</li>
+  <li>save the file and try to run <code class="highlighter-rouge">xtcointreg</code> again. This problem is related to the publisher of the code and not to my code itself.</li>
+</ol>
+
+</div>
+
+<div class="share-page">
+	<a href="https://twitter.com/share?
+		text=[enter%20text]&
+		url=http://localhost:4000/articles/xtcointreg.html&
+		via=ravshansk"
+	   target="_blank"
+	>Tweet it</a>
+
+	<a href="https://www.linkedin.com/shareArticle?
+		mini=true&
+		url=http://localhost:4000/articles/xtcointreg.html&
+		title=Introducing Panel FMOLS/DOLS command for Stata
+		summary=&
+		source=Ravshan S.K."
+	   target="_blank"
+	>Share on Linkedin</a>
+
+    <a href="https://facebook.com/sharer.php?
+		u=http://localhost:4000/articles/xtcointreg.html"
+	   target="_blank"
+	>Share on Facebook</a>
+    
+	<a href="https://plus.google.com/share?
+		url=http://localhost:4000/articles/xtcointreg.html"
+	   target="_blank"
+	>Share on Google+</a>
+
+</div>
+
+<script src="https://apis.google.com/js/plusone.js"></script>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.1';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div class="fb-comments"
+	data-href="http://localhost:4000/articles/xtcointreg.html"
+	data-numposts="5"
+	data-width="642">
+</div>
+ 
+<div class="g-comments"
+     data-href="http://localhost:4000/articles/xtcointreg.html"
+     data-width="642"
+     data-first_party_property="BLOGGER"
+     data-view_type="FILTERED_POSTMOD">
+</div>
+
+
+
+    </div>
+
+	<div class="sidebar">
+		<div class="categories">
+			<h3>Read categories</h3>
+				<a class="categs" href="/economics">economics</a>
+				<a class="categs" href="/statistics">statistics</a>
+				<a class="categs" href="/finance">finance</a>
+				<a class="categs" href="/management">management</a>
+				<a class="categs" href="/complexity">complexity</a>
+				<a class="categs" href="/crypto">crypto</a>
+		</div>
+		<div class="recent">
+			<h3>Recent articles</h3>
+				<ul>
+					
+						
+   	   						<li class="post-title"><a href="/articles/brazil-noshow.html">My take on the famous medical appointment no-show problem</a></li>
+						
+					
+						
+					
+						
+					
+						
+   	   						<li class="post-title"><a href="/articles/saudi-visa.html">Using matching with quotas to solve Hajj visa problem</a></li>
+						
+					
+						
+   	   						<li class="post-title"><a href="/articles/valuation-calc.html">Valuation Calculator for Subscription-Based Businesses</a></li>
+						
+					
+				</ul>
+		</div>
+	</div>
+
+	<div class="footer">
+		<div class="titlecenter">
+			Copyright 2018. All rights reserved
+		</div>
+	</div>
+
+	<script>
+	function myFunction() {
+		var x = document.getElementById("myTopNav");
+		if (x.className === "topnav") {
+			x.className += " responsive";
+		} else {
+			x.className = "topnav";
+		}
+	}
+	</script>
+
+  </body>
+</html>

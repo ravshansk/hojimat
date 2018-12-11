@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3">
+  <meta name="description" content="A simple trick to simulate Likert scale (categorical) data in R without any libraries.">
+  
+ <meta name="keywords" content="Likert scale, Likert scale in R, R studio, statistics expert, statistical consultant, statistical consulting" />
+  
+
+ <meta name="twitter:site"    content="@ravshansk">
+ <meta name="twitter:title"   content="Simulating Likert scale data in R">
+ <meta name="twitter:card"  content="summary_large_image">
+ <meta property="fb:admins" content="ravshanskh">
+ 
+ <meta property="og:image" content="http://ravshansk.com/assets/img/thumb.jpg">
+ <meta name="twitter:image" content="http://ravshansk.com/assets/img/thumb.jpg">
+ 
+
+  <title>
+    
+      Simulating Likert scale data in R &middot; Ravshan S.K.
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" media='screen and (max-width: 850px)' href='/assets/css/mobile.css' />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-111922010-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-111922010-1');
+</script>
+
+
+</head>
+
+<!-- Begin Jekyll SEO tag v2.3.0 -->
+<title>Simulating Likert scale data in R | Ravshan S.K.</title>
+<meta property="og:title" content="Simulating Likert scale data in R" />
+<meta name="author" content="Ravshanbek Khodzhimatov" />
+<meta property="og:locale" content="english" />
+<meta name="description" content="A simple trick to simulate Likert scale (categorical) data in R without any libraries." />
+<meta property="og:description" content="A simple trick to simulate Likert scale (categorical) data in R without any libraries." />
+<link rel="canonical" href="http://localhost:4000/articles/likert.html" />
+<meta property="og:url" content="http://localhost:4000/articles/likert.html" />
+<meta property="og:site_name" content="Ravshan S.K." />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-10-31T00:00:00+06:00" />
+<script type="application/ld+json">
+{"description":"A simple trick to simulate Likert scale (categorical) data in R without any libraries.","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/articles/likert.html"},"@type":"BlogPosting","url":"http://localhost:4000/articles/likert.html","name":null,"headline":"Simulating Likert scale data in R","dateModified":"2018-10-31T00:00:00+06:00","datePublished":"2018-10-31T00:00:00+06:00","sameAs":null,"publisher":null,"image":null,"author":{"@type":"Person","name":"Ravshanbek Khodzhimatov"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <body>
+
+    <div class="titlehead">
+        <div class="titleleft">
+          <a href="/#" title="Home">Ravshan S.K.</a>
+        </div>
+		<nav class="topnav" id="myTopNav">
+  			<div class="nav-container">
+  	    			<a href="/#about" title="About">About</a>
+  	    			<a href="/#works" title="Works">Works</a>
+  	    			<a href="/#hire" title="Hire">Hire now</a>
+  	    			<a href="/#contact" title="Contact">Contact</a>
+  	    			<a href="/articles" title="Articles">Articles</a>
+  	    			<a href="/blog" title="Blog">Blog</a>
+					<a href="javascript:void(0);" class="icon" onclick="myFunction()">
+						<i class="fa fa-bars"></i>
+					</a>
+  			</div>
+		</nav>
+    </div>
+
+
+    <div class="container content">
+      <div class="post">
+  <h1 class="post-title">Simulating Likert scale data in R</h1>
+  <span class="post-date">31 Oct 2018</span>
+  <p>In my last project I had to find theoretical limits for a <em>psychometric</em> index involving <em>Likert scale data</em> (aka <em>categorical data</em>). After successfully finding it, I decided to test the results in a simple <em>Monte-Carlo simulation</em>.</p>
+
+<p>I was surprised to find out that there is no built-in categorical data generator in <em>R</em>. What I was looking for, was something like <code class="highlighter-rouge">runif(100)</code> which would generate a vector of length <em>100</em> where every element is drawn from a <em>multinomial distribution</em> in general or a categorical distribution in particular.</p>
+
+<p>The first idea was to use <code class="highlighter-rouge">sample</code> function with given probabilities: <code class="highlighter-rouge">sample(c(0,1,2),1,prob=c(0.33, 0.33, 0.34))</code> but you couldn’t repeat this procedure for <em>N</em> participants without using loops, which is very inefficient, or you would end up with <code class="highlighter-rouge">rep</code> repeating the same random pick <em>N</em> times.</p>
+
+<p>I didn’t want to use any third-party libraries just for this small application either, so I came up with this simple trick.</p>
+
+<h3 id="algorithm">Algorithm</h3>
+
+<p>Suppose, you want to generate a 5-category data <em>(x1, x2, x3, x4, x5)</em> for <em>N</em> participants with probabilities <em>(1/10, 2/10, 4/10, 2/10, 1/10)</em>. The following formula will work:</p>
+
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">distribution</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="nf">rep</span><span class="p">(</span><span class="n">x</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="nf">rep</span><span class="p">(</span><span class="n">x</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">),</span><span class="nf">rep</span><span class="p">(</span><span class="n">x</span><span class="m">3</span><span class="p">,</span><span class="m">4</span><span class="p">),</span><span class="nf">rep</span><span class="p">(</span><span class="n">x</span><span class="m">4</span><span class="p">,</span><span class="m">2</span><span class="p">),</span><span class="nf">rep</span><span class="p">(</span><span class="n">x</span><span class="m">5</span><span class="p">,</span><span class="m">1</span><span class="p">))</span><span class="w">
+</span><span class="n">potential</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span><span class="w"> </span><span class="n">M</span><span class="p">)</span><span class="w">
+</span><span class="n">likert_data</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">sample</span><span class="p">(</span><span class="n">potential</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>or, as one-liner:</p>
+
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">likert_data</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">sample</span><span class="p">(</span><span class="nf">rep</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="nf">rep</span><span class="p">(</span><span class="n">x</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="nf">rep</span><span class="p">(</span><span class="n">x</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">),</span><span class="nf">rep</span><span class="p">(</span><span class="n">x</span><span class="m">3</span><span class="p">,</span><span class="m">4</span><span class="p">),</span><span class="nf">rep</span><span class="p">(</span><span class="n">x</span><span class="m">4</span><span class="p">,</span><span class="m">2</span><span class="p">),</span><span class="nf">rep</span><span class="p">(</span><span class="n">x</span><span class="m">5</span><span class="p">,</span><span class="m">1</span><span class="p">)),</span><span class="w"> </span><span class="n">M</span><span class="p">),</span><span class="w"> </span><span class="n">N</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Notice that <code class="highlighter-rouge">distribution</code> sets the probabilities, <code class="highlighter-rouge">potential</code> repeats this <em>M</em> times (where <em>M</em> is any number greater than or equal to <em>N</em> — I personally used <em>M = N</em>), and <code class="highlighter-rouge">likert_data</code> (<em>uniformly</em>) randomly picks <em>N</em> elements and returns the required vector.</p>
+
+<figure class="blog">
+	<img src="/assets/img/likert/likert.png" />
+	<figcaption>A frequency table of likert_data</figcaption>
+</figure>
+
+<p>Notice how in the screenshot above, we obtain almost exact probabilities we wanted: <em>(1, 2, 4, 2, 1)/10</em>. Since every time is a random draw, there are some deviations, but repeating this formula and averaging, gives the desired values.</p>
+
+<p><strong>UPDATE:</strong> A StackExchange user suggested a better hack — to randomly sample <em>with replacement</em>. This would make my solution obsolete, but it’s brilliant:</p>
+
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">likert_data</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">sample</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="n">x</span><span class="m">1</span><span class="p">,</span><span class="n">x</span><span class="m">2</span><span class="p">,</span><span class="n">x</span><span class="m">3</span><span class="p">,</span><span class="n">x</span><span class="m">4</span><span class="p">,</span><span class="n">x</span><span class="m">5</span><span class="p">),</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">replace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span><span class="w"> </span><span class="n">prob</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="o">/</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="o">/</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="o">/</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="o">/</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="o">/</span><span class="m">10</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+
+</div>
+
+<div class="share-page">
+	<a href="https://twitter.com/share?
+		text=[enter%20text]&
+		url=http://localhost:4000/articles/likert.html&
+		via=ravshansk"
+	   target="_blank"
+	>Tweet it</a>
+
+	<a href="https://www.linkedin.com/shareArticle?
+		mini=true&
+		url=http://localhost:4000/articles/likert.html&
+		title=Simulating Likert scale data in R
+		summary=A simple trick to simulate Likert scale (categorical) data in R without any libraries.&
+		source=Ravshan S.K."
+	   target="_blank"
+	>Share on Linkedin</a>
+
+    <a href="https://facebook.com/sharer.php?
+		u=http://localhost:4000/articles/likert.html"
+	   target="_blank"
+	>Share on Facebook</a>
+    
+	<a href="https://plus.google.com/share?
+		url=http://localhost:4000/articles/likert.html"
+	   target="_blank"
+	>Share on Google+</a>
+
+</div>
+
+<script src="https://apis.google.com/js/plusone.js"></script>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.1';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div class="fb-comments"
+	data-href="http://localhost:4000/articles/likert.html"
+	data-numposts="5"
+	data-width="642">
+</div>
+ 
+<div class="g-comments"
+     data-href="http://localhost:4000/articles/likert.html"
+     data-width="642"
+     data-first_party_property="BLOGGER"
+     data-view_type="FILTERED_POSTMOD">
+</div>
+
+
+
+    </div>
+
+	<div class="sidebar">
+		<div class="categories">
+			<h3>Read categories</h3>
+				<a class="categs" href="/economics">economics</a>
+				<a class="categs" href="/statistics">statistics</a>
+				<a class="categs" href="/finance">finance</a>
+				<a class="categs" href="/management">management</a>
+				<a class="categs" href="/complexity">complexity</a>
+				<a class="categs" href="/crypto">crypto</a>
+		</div>
+		<div class="recent">
+			<h3>Recent articles</h3>
+				<ul>
+					
+						
+   	   						<li class="post-title"><a href="/articles/brazil-noshow.html">My take on the famous medical appointment no-show problem</a></li>
+						
+					
+						
+					
+						
+					
+						
+   	   						<li class="post-title"><a href="/articles/saudi-visa.html">Using matching with quotas to solve Hajj visa problem</a></li>
+						
+					
+						
+   	   						<li class="post-title"><a href="/articles/valuation-calc.html">Valuation Calculator for Subscription-Based Businesses</a></li>
+						
+					
+				</ul>
+		</div>
+	</div>
+
+	<div class="footer">
+		<div class="titlecenter">
+			Copyright 2018. All rights reserved
+		</div>
+	</div>
+
+	<script>
+	function myFunction() {
+		var x = document.getElementById("myTopNav");
+		if (x.className === "topnav") {
+			x.className += " responsive";
+		} else {
+			x.className = "topnav";
+		}
+	}
+	</script>
+
+  </body>
+</html>
